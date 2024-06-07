@@ -1,0 +1,300 @@
+---
+title: "RLC0109"
+output: html_document
+date: "2024-05-05"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(readxl)
+library(grid)
+library(gridExtra)
+dr <- read.csv("RLCQ.csv")
+f <- function(x, a, b) {b*tanh(a*x/b)}
+```
+
+```{r}
+#C
+options(scipen = 999)
+dc1 <- dr %>% 
+  filter(group %in% c("C1")) 
+dim(dc1)
+head(dc1)
+dc1 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitc1 <- nls(y ~ f(x, a, b), data = dc1, start = list(a = 0.08, b = 178))
+summary(fitc1)
+names(summary(fitc1))
+coefficients(fitc1)
+a <- coefficients(fitc1)[1]
+b <- coefficients(fitc1)[2]
+fit_x <- seq(0, 4000, length.out = 250)
+fit_yc1 <- b*tanh(a*fit_x/b)
+d_fitc1 <- data.frame(x = fit_x, y = fit_yc1)
+head(d_fitc1)
+```
+
+```{r}
+dc2 <- dr %>% 
+  filter(group %in% c("C2")) 
+dim(dc2)
+head(dc2)
+dc2 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitc2 <- nls(y ~ f(x, a, b), data = dc2, start = list(a = 0.08, b = 178))
+summary(fitc2)
+```
+
+```{r}
+dc3 <- dr %>% 
+  filter(group %in% c("C3")) 
+dc3 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitc3 <- nls(y ~ f(x, a, b), data = dc3, start = list(a = 0.08, b = 178))
+summary(fitc3)
+```
+
+```{r}
+dt1 <- dr %>% 
+  filter(group %in% c("T1")) 
+dt1 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitt1 <- nls(y ~ f(x, a, b), data = dt1, start = list(a = 0.11, b = 199))
+summary(fitt1)
+```
+
+```{r}
+dt2 <- dr %>% 
+  filter(group %in% c("T2")) 
+dt2 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitt2 <- nls(y ~ f(x, a, b), data = dt2, start = list(a = 0.08, b = 178))
+summary(fitt2)
+```
+
+```{r}
+dt3 <- dr %>% 
+  filter(group %in% c("T3")) 
+dt3 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitt3 <- nls(y ~ f(x, a, b), data = dt3, start = list(a = 0.08, b = 178))
+summary(fitt3)
+```
+
+```{r}
+dn1 <- dr %>% 
+  filter(group %in% c("N1")) 
+head(dn1)
+dn1 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitn1 <- nls(y ~ f(x, a, b), data = dn1, start = list(a = 0.08, b = 190))
+summary(fitn1)
+```
+
+```{r}
+dn2 <- dr %>% 
+  filter(group %in% c("N2")) 
+head(dn2)
+dn2 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitn2 <- nls(y ~ f(x, a, b), data = dn2, start = list(a = 0.08, b = 160))
+summary(fitn2)
+```
+
+```{r}
+dn3 <- dr %>% 
+  filter(group %in% c("N3")) 
+dn3 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitn3 <- nls(y ~ f(x, a, b), data = dn3, start = list(a = 0.08, b = 160))
+summary(fitn3)
+```
+
+```{r}
+dtn1 <- dr %>% 
+  filter(group %in% c("TN1")) 
+dtn1 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fittn1 <- nls(y ~ f(x, a, b), data = dtn1, start = list(a = 0.08, b = 160))
+summary(fittn1)
+```
+
+```{r}
+dtn2 <- dr %>% 
+  filter(group %in% c("TN2")) 
+dtn2 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fittn2 <- nls(y ~ f(x, a, b), data = dtn2, start = list(a = 0.08, b = 160))
+summary(fittn2)
+```
+
+```{r}
+dtn3 <- dr %>% 
+  filter(group %in% c("TN3")) 
+dtn3 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fittn3 <- nls(y ~ f(x, a, b), data = dtn3, start = list(a = 0.08, b = 160))
+summary(fittn3)
+```
+
+```{r}
+da1 <- dr %>% 
+  filter(group %in% c("A1")) 
+da1 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fita1 <- nls(y ~ f(x, a, b), data = da1, start = list(a = 0.08, b = 160))
+summary(fita1)
+```
+
+```{r}
+da2 <- dr %>% 
+  filter(group %in% c("A2")) 
+da2
+da2 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fita2 <- nls(y ~ f(x, a, b), data = da2, start = list(a = 0.08, b = 180))
+summary(fita2)
+```
+
+```{r}
+da3 <- dr %>% 
+  filter(group %in% c("A3")) 
+da3 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fita3 <- nls(y ~ f(x, a, b), data = da3, start = list(a = 0.08, b = 180))
+summary(fita3)
+```
+
+```{r}
+dta1 <- dr %>% 
+  filter(group %in% c("TA1")) 
+dta1 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitta1 <- nls(y ~ f(x, a, b), data = dta1, start = list(a = 0.08, b = 180))
+summary(fitta1)
+```
+
+```{r}
+dta2 <- dr %>% 
+  filter(group %in% c("TA2")) 
+dta2 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitta2 <- nls(y ~ f(x, a, b), data = dta2, start = list(a = 0.08, b = 160))
+summary(fitta2)
+```
+
+```{r}
+dta3 <- dr %>% 
+  filter(group %in% c("TA3")) 
+dta3 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitta3 <- nls(y ~ f(x, a, b), data = dta3, start = list(a = 0.08, b = 160))
+summary(fitta3)
+```
+
+```{r}
+dan1 <- dr %>% 
+  filter(group %in% c("AN1")) 
+dan1 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitan1 <- nls(y ~ f(x, a, b), data = dan1, start = list(a = 0.08, b = 180))
+summary(fitan1)
+```
+
+```{r}
+dan2 <- dr %>% 
+  filter(group %in% c("AN2")) 
+dan2 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitan2 <- nls(y ~ f(x, a, b), data = dan2, start = list(a = 0.08, b = 180))
+summary(fitan2)
+```
+
+```{r}
+dan3 <- dr %>% 
+  filter(group %in% c("AN3")) 
+dan3 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fitan3 <- nls(y ~ f(x, a, b), data = dan3, start = list(a = 0.08, b = 180))
+summary(fitan3)
+```
+
+```{r}
+dtan3 <- dr %>% 
+  filter(group %in% c("TAN3")) 
+dtan3 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fittan3 <- nls(y ~ f(x, a, b), data = dtan3, start = list(a = 0.08, b = 180))
+summary(fittan3)
+```
+
+```{r}
+dtan1 <- dr %>% 
+  filter(group %in% c("TAN1")) 
+dtan1 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fittan1 <- nls(y ~ f(x, a, b), data = dtan1, start = list(a = 0.08, b = 180))
+summary(fittan1)
+```
+
+```{r}
+dtan2 <- dr %>% 
+  filter(group %in% c("TAN2")) 
+dtan2 %>% 
+ ggplot(aes(x, y))+
+ geom_point(stat="summary", fun="mean")+
+ geom_errorbar(stat = "summary", fun.min = function(x) mean(x)-sd(x), fun.max = function(x) mean(x)+sd(x), width=0.2)
+fittan2 <- nls(y ~ f(x, a, b), data = dtan2, start = list(a = 0.08, b = 180))
+summary(fittan2)
+```
